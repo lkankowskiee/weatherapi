@@ -3,5 +3,41 @@
 {% block title %}Weather Forecasts{% endblock %}
 
 {% block body %}
-
+    <h1>Forecasts</h1>
+    <table class="table table-primary">
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Temp (min/max/avg)</th>
+                <th>Wind (max)</th>
+                <th>Precipitation</th>
+                <th>Visibility</th>
+                <th>Humidity</th>
+                <th>Rain (%)</th>
+                <th>Snow</th>
+                <th>Condition</th>
+                <th>UV</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in forecasts %}
+                <tr>
+                    <td>{{ f.location.name }}</td>
+                    <td>{{ f.date.format('Y-m-d') }}</td>
+                    <td>{{ f.mintempC }}/{{ f.maxtempC }}/{{ f.avgtempC }}</td>
+                    <td>{{ f.maxwindKph }}</td>
+                    <td>{{ f.totalprecipMm }}</td>
+                    <td>{{ f.avgvisKm }}</td>
+                    <td>{{ f.avghumidity }}</td>
+                    <td>{{ f.dailyWillItRain }} ({{ f.dailyChanceOfRain }}%)</td>
+                    <td>{{ f.dailyWillItSnow }} ({{ f.dailyChanceOfSnow }}%)</td>
+                    <td>{{ f.conditionText }}<img src="{{ f.conditionIcon }}"/></td>
+                    <td>{{ f.uv }}</td>
+                    <td>{{ f.hours }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

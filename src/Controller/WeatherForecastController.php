@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Location;
+use App\Repository\ForecastRepository;
 use App\Repository\LocationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,10 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class WeatherForecastController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(): Response
+    public function index(ForecastRepository $repository): Response
     {
-        return $this->render('weather_forecast/index.html.twig', [
+        $forecasts = $repository->findAll();
 
+        return $this->render('weather_forecast/index.html.twig', [
+            'forecasts' => $forecasts
         ]);
     }
 
