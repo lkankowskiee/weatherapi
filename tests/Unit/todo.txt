@@ -1,0 +1,9 @@
+Przygotuj aplikację pobierającą informacje o pogodzie korzystającą z API https://www.weatherapi.com.
+Aplikacja powinna zapisywać dane do bazy oraz umożliwiać ich edycję.
+Należy przygotować testowy zestaw danych (może być random w fixtures).
+
+Postawienie środowiska na dockerze.
+
+Opcjonalnie:
+Dodatkowo powinna być strona z listą wszystkich zapisanych pogód (około 1000 wierszy),
+która posiada zrobioną paginację bez użycia paczek (w czystym symfony).

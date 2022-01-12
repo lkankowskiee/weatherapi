@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Weather API App{% endblock %}
+
+{% block body %}
+    <ul>
+        <li><a href="{{ path('home') }}">Current weather</a></li>
+        <li><a href="{{ path('location.index') }}">Locations</a></li>
+        <li><a href="{{ path('forecast.index') }}">Forecasts</a></li>
+    </ul>
+{% endblock %}

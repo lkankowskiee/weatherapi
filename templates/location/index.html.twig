@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Locations{% endblock %}
+
+{% block body %}
+    <h2>Locations</h2>
+    <ul>
+        {% for loc in locations %}
+            <li>
+                {{ loc.name }} - {{ loc.country }}
+                <a href="{{ path('location.edit', {id: loc.id}) }}">Edit</a>,
+                <a href="{{ path('location.delete', {id: loc.id}) }}">Delete</a>,
+                <a href="{{ path('forecast.update', {id: loc.id}) }}">Get 10 days forecast</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ path('location.edit') }}"><button class="btn btn-primary">Add</button></a>
+{% endblock %}

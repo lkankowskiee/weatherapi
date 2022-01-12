@@ -1,0 +1,41 @@
+{
+  "location": {
+    "name": "Gdańsk",
+    "region": "",
+    "country": "Polônia",
+    "lat": 54.35,
+    "lon": 18.67,
+    "tz_id": "Europe/Warsaw",
+    "localtime_epoch": 1641930914,
+    "localtime": "2022-01-11 20:55"
+  },
+  "current": {
+    "last_updated_epoch": 1641930300,
+    "last_updated": "2022-01-11 20:45",
+    "temp_c": -2.0,
+    "temp_f": 28.4,
+    "is_day": 0,
+    "condition": {
+      "text": "Mist",
+      "icon": "//cdn.weatherapi.com/weather/64x64/night/143.png",
+      "code": 1030
+    },
+    "wind_mph": 2.5,
+    "wind_kph": 4.0,
+    "wind_degree": 280,
+    "wind_dir": "W",
+    "pressure_mb": 1035.0,
+    "pressure_in": 30.56,
+    "precip_mm": 0.0,
+    "precip_in": 0.0,
+    "humidity": 93,
+    "cloud": 100,
+    "feelslike_c": -2.8,
+    "feelslike_f": 27.0,
+    "vis_km": 4.1,
+    "vis_miles": 2.0,
+    "uv": 1.0,
+    "gust_mph": 2.5,
+    "gust_kph": 4.0
+  }
+}
