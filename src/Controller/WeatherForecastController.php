@@ -2,24 +2,38 @@
 
 namespace App\Controller;
 
-use App\Entity\Location;
 use App\Repository\ForecastRepository;
 use App\Repository\LocationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
 
 #[Route('/forecast', name: 'forecast.')]
 class WeatherForecastController extends AbstractController
 {
-    #[Route('/', name: 'index')]
-    public function index(ForecastRepository $repository): Response
+    #[Route('/{page?}', name: 'index')]
+    public function index(?string $page, ForecastRepository $repository): Response
     {
-        $forecasts = $repository->findAll();
+        $page = !$page && !is_int($page) ? 1 : $page;
+        $offset = max(($page - 1), 0) * 10;
+
+        $forecasts = $repository->findBy([], ['id' => 'ASC'], 10, $offset);
+
+        $count = $repository->getCount();
+
+        $maxPages = ceil($count / 10);
 
         return $this->render('weather_forecast/index.html.twig', [
-            'forecasts' => $forecasts
+            'forecasts' => $forecasts,
+            'pager'     => [
+                'current'  => $page,
+                'previous' => max($page - 1, 1),
+                'next'     => min($page + 1, $maxPages),
+                'last'     => $maxPages,
+            ]
         ]);
     }
 

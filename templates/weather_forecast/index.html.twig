@@ -4,6 +4,13 @@
 
 {% block body %}
     <h1>Forecasts</h1>
+    <span>
+        <a href="{{ path('forecast.index') }}/1">First</a>
+        <a href="{{ path('forecast.index')}}/{{ pager.previous }}">Previous</a>
+        {{ pager.current }}
+        <a href="{{ path('forecast.index') }}/{{ pager.next }}">Next</a>
+        <a href="{{ path('forecast.index') }}/{{ pager.last }}">Last</a>
+    </span>
     <table class="table table-primary">
         <thead>
             <tr>

@@ -16,11 +16,13 @@ class AppFixtures extends Fixture
         $location->setCountry('Some country');
         $manager->persist($location);
 
-        for($i = 0; $i < 1000; $i++)
+        $date = new \DateTime();
+
+        for($i = 0; $i < 1001; $i++)
         {
             $forecast = new Forecast();
             $forecast->setLocation($location);
-            $forecast->setDate(new \DateTime());
+            $forecast->setDate(clone $date);
             $forecast->setMaxtempC(0.1);
             $forecast->setMintempC(-2.6);
             $forecast->setAvgtempC(-1.2);
@@ -38,6 +40,7 @@ class AppFixtures extends Fixture
             $forecast->setHours(null);
             $manager->persist($forecast);
             unset($forecast);
+            $date->add(new \DateInterval('P1D'));
         }
 
         $manager->flush();
