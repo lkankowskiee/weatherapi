@@ -10,6 +10,7 @@
             {% if weather.code != 200 %}
                 <strong>Location not found</strong>
             {% else %}
+                <h2>{{ weather.location.name }} ({{ weather.location.country }})</h2>
                 <ul>
                     <li>Temperature: {{ weather.current.temp_c }}C (feels like: {{ weather.current.feelslike_c }}C)</li>
                     <li>Condition: {{ weather.current.condition.text }}<img src="{{ weather.current.condition.icon }}"/></li>

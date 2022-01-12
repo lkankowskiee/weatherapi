@@ -7,3 +7,12 @@ Postawienie środowiska na dockerze.
 Opcjonalnie:
 Dodatkowo powinna być strona z listą wszystkich zapisanych pogód (około 1000 wierszy),
 która posiada zrobioną paginację bez użycia paczek (w czystym symfony).
+
+
+- testy integracyjne
+- testy jednostkowe + uszczelnianie
+- ładowanie hours jako JSON
+- random w danych Forecast
+- fixtures dla lokalizacji - sensowne dane
+- test na MySQL
+- uzupełnić "get 10 days forecast"

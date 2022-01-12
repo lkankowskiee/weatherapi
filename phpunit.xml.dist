@@ -26,7 +26,7 @@
 
     <groups>
         <exclude>
-            <group>Integration</group>
+            <group>integration</group>
         </exclude>
     </groups>
 
