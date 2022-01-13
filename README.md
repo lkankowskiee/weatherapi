@@ -11,8 +11,9 @@ On _Forecasts_ section there is a pager implementation with a little caching mec
 
 # Install
 ```shell
-composer install
 docker-compose up -d
+docker-compose exec php-fpm composer install
+docker-compose exec php-fpm php bin/console doctrine:schema:create
 ```
 and go to https://127.0.0.1:8000/ in browser.
 
