@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Forecast;
+use App\Http\WeatherApiClient;
 use App\Repository\ForecastRepository;
 use App\Repository\LocationRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Cache\ItemInterface;
 
 #[Route('/forecast', name: 'forecast.')]
 class WeatherForecastController extends AbstractController
@@ -37,21 +37,60 @@ class WeatherForecastController extends AbstractController
         ]);
     }
 
-    #[Route('/update/{id}', name: 'update')]
-    public function updateFromApi(string $id, LocationRepository $locationRepository, ManagerRegistry $doctrine): Response
+    #[Route('/update/{locationId}', name: 'update')]
+    public function updateFromApi(string             $locationId,
+                                  LocationRepository $locationRepository,
+                                  ManagerRegistry    $doctrine,
+                                  WeatherApiClient   $weatherApiClient): Response
     {
-        $location = $locationRepository->findOneBy(['id' => $id]);
+        $location = $locationRepository->findOneBy(['id' => $locationId]);
         if (!$location) {
             $this->addFlash('warning', 'Location not found in DB');
             return $this->redirect($this->generateUrl('forecast.index'));
         }
-//        $entityManager = $doctrine->getManager();
 
-//        $entityManager->persist($location);
-//        $entityManager->flush();
+        $response = $weatherApiClient->fetchForecastWeather($location->getName(), 10);
+        if ($response['code'] === 200) {
+            $entityManager = $doctrine->getManager();
+
+            foreach($response['forecast']['forecastday'] as $f) {
+                $forecast = new Forecast();
+                $forecast->setLocation($location);
+                $forecast->setDate(new \DateTime($f['date']));
+                $forecast->setMaxtempC($f['day']['maxtemp_c']);
+                $forecast->setMintempC($f['day']['mintemp_c']);
+                $forecast->setAvgtempC($f['day']['avgtemp_c']);
+                $forecast->setMaxwindKph($f['day']['maxwind_kph']);
+                $forecast->setTotalprecipMm($f['day']['totalprecip_mm']);
+                $forecast->setAvgvisKm($f['day']['avgvis_km']);
+                $forecast->setAvghumidity($f['day']['avghumidity']);
+                $forecast->setDailyWillItRain($f['day']['daily_will_it_rain']);
+                $forecast->setDailyChanceOfRain($f['day']['daily_chance_of_rain']);
+                $forecast->setDailyWillItSnow($f['day']['daily_will_it_snow']);
+                $forecast->setDailyChanceOfSnow($f['day']['daily_chance_of_snow']);
+                $forecast->setConditionText($f['day']['condition']['text']);
+                $forecast->setConditionIcon($f['day']['condition']['icon']);
+                $forecast->setUv($f['day']['uv']);
+                // TODO: unset unnecessary data
+                $forecast->setHours($f['hour']);
+
+                $entityManager->persist($forecast);
+
+                unset($forecast);
+            }
+            $entityManager->flush();
+        }
 
         $this->addFlash('success', 'Forecast for ' . $location->getName() . ' updated');
 
         return $this->redirect($this->generateUrl('forecast.index'));
+    }
+
+    #[Route('/hourly/{id}', name: 'hourly')]
+    public function hourly(Forecast $forecast): Response
+    {
+        return $this->render('weather_forecast/hourly.html.twig', [
+            'hourly' => $forecast->getHours()
+        ]);
     }
 }

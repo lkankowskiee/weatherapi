@@ -32,7 +32,7 @@ class CurrentWeatherController extends AbstractController
             $locQuery = $form->getData()['q'];
             $session->set('prevLocation', $locQuery);
 
-            $weatherData = $weatherApiClient->getCurrentWeather($locQuery);
+            $weatherData = $weatherApiClient->fetchCurrentWeather($locQuery);
             if ($weatherData['code'] === 200) {
                 // add new location to DB - should be moved somewhere else
                 $locationRepo = $doctrine->getRepository(Location::class);

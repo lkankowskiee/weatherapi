@@ -10,7 +10,7 @@
                 {{ loc.name }} - {{ loc.country }}
                 <a href="{{ path('location.edit', {id: loc.id}) }}">Edit</a>,
                 <a href="{{ path('location.delete', {id: loc.id}) }}">Delete</a>,
-                <a href="{{ path('forecast.update', {id: loc.id}) }}">Get 10 days forecast</a>
+                <a href="{{ path('forecast.update', {locationId: loc.id}) }}">Get 10 days forecast</a>
             </li>
         {% endfor %}
     </ul>

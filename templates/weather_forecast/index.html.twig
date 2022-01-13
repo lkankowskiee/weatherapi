@@ -24,7 +24,7 @@
                 <th>Rain (%)</th>
                 <th>Snow</th>
                 <th>Condition</th>
-                <th>UV</th>
+                <th>UV Index</th>
                 <th>Hours</th>
             </tr>
         </thead>
@@ -33,16 +33,16 @@
                 <tr>
                     <td>{{ f.location.name }}</td>
                     <td>{{ f.date.format('Y-m-d') }}</td>
-                    <td>{{ f.mintempC }}/{{ f.maxtempC }}/{{ f.avgtempC }}</td>
-                    <td>{{ f.maxwindKph }}</td>
-                    <td>{{ f.totalprecipMm }}</td>
-                    <td>{{ f.avgvisKm }}</td>
-                    <td>{{ f.avghumidity }}</td>
-                    <td>{{ f.dailyWillItRain }} ({{ f.dailyChanceOfRain }}%)</td>
-                    <td>{{ f.dailyWillItSnow }} ({{ f.dailyChanceOfSnow }}%)</td>
+                    <td>{{ f.mintempC }}/{{ f.maxtempC }}/{{ f.avgtempC }}&#8451;</td>
+                    <td>{{ f.maxwindKph }}Kph</td>
+                    <td>{{ f.totalprecipMm }}mm</td>
+                    <td>{{ f.avgvisKm }}km</td>
+                    <td>{{ f.avghumidity }}%</td>
+                    <td>{{ f.dailyWillItRain ? 'Yes' : 'No' }} ({{ f.dailyChanceOfRain }}%)</td>
+                    <td>{{ f.dailyWillItSnow ? 'Yes' : 'No' }} ({{ f.dailyChanceOfSnow }}%)</td>
                     <td>{{ f.conditionText }}<img src="{{ f.conditionIcon }}"/></td>
                     <td>{{ f.uv }}</td>
-                    <td>{{ f.hours }}</td>
+                    <td>{% if f.hours %}<a href="{{ path('forecast.hourly', {id: f.id}) }}">Hourly</a>{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>

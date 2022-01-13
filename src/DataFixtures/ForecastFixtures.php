@@ -11,24 +11,25 @@ class ForecastFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $refs = ['warszawa', 'london'];
         $date = new \DateTime();
 
-        for($i = 0; $i < 1001; $i++)
+        for($i = 0; $i < 10001; $i++)
         {
             $forecast = new Forecast();
-            $forecast->setLocation($this->getReference('location_1'));
+            $forecast->setLocation($this->getReference($refs[mt_rand(0, 1)]));
             $forecast->setDate(clone $date);
-            $forecast->setMaxtempC(0.1);
-            $forecast->setMintempC(-2.6);
-            $forecast->setAvgtempC(-1.2);
-            $forecast->setMaxwindKph(8.3);
-            $forecast->setTotalprecipMm(0.2);
-            $forecast->setAvgvisKm(9.8);
+            $forecast->setAvgtempC(mt_rand(-200, 400)/10);
+            $forecast->setMaxtempC($forecast->getAvgtempC() + mt_rand(-50, 50)/10);
+            $forecast->setMintempC($forecast->getAvgtempC() - mt_rand(-50, 50)/10);
+            $forecast->setMaxwindKph(mt_rand(1, 2000)/10);
+            $forecast->setTotalprecipMm(mt_rand(0, 100)/10);
+            $forecast->setAvgvisKm(mt_rand(0, 500)/10);
             $forecast->setAvghumidity(mt_rand(10, 100));
-            $forecast->setDailyWillItRain(true);
-            $forecast->setDailyChanceOfRain(72);
-            $forecast->setDailyWillItSnow(0);
-            $forecast->setDailyChanceOfSnow(7);
+            $forecast->setDailyWillItRain((bool) mt_rand(0, 1));
+            $forecast->setDailyChanceOfRain(mt_rand(10, 100));
+            $forecast->setDailyWillItSnow((bool) mt_rand(0, 1));
+            $forecast->setDailyChanceOfSnow(mt_rand(10, 100));
             $forecast->setConditionText('Light snow');
             $forecast->setConditionIcon('//cdn.weatherapi.com/weather/64x64/day/326.png');
             $forecast->setUv(1.0);
@@ -36,6 +37,10 @@ class ForecastFixtures extends Fixture implements DependentFixtureInterface
             $manager->persist($forecast);
             unset($forecast);
             $date->add(new \DateInterval('P1D'));
+
+            if ($i % 50 === 0) {
+                $manager->flush();
+            }
         }
 
         $manager->flush();

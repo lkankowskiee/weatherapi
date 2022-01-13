@@ -3,19 +3,19 @@
 ###############################################################################
 version: '3.1'
 services:
-  #    mariadb:
-  #        image: 'mariadb:10.6'
-  #        working_dir: /application
-  #        volumes:
-  #            - 'db-data:/var/lib/mysql'
-  #            - '.:/application'
-  #        environment:
-  #            - MYSQL_ROOT_PASSWORD=toor
-  #            - MYSQL_DATABASE=db
-  #            - MYSQL_USER=db_user
-  #            - MYSQL_PASSWORD=db_pass
-  #        ports:
-  #            - '6003:3306'
+  mariadb:
+    image: 'mariadb:10.6'
+    working_dir: /application
+    volumes:
+      - 'db-data:/var/lib/mysql'
+      - '.:/application'
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=db_user
+      - MYSQL_PASSWORD=db_pass
+    ports:
+      - '6003:3306'
 
   webserver:
     image: 'nginx:alpine'
@@ -38,5 +38,5 @@ services:
 #    ports: [1025, 1080]
 
 
-#volumes:
-#  db-data:
+volumes:
+  db-data:

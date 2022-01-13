@@ -14,7 +14,7 @@ class WeatherApiClient
     {
     }
 
-    public function getCurrentWeather(string $location): array
+    public function fetchCurrentWeather(string $location): array
     {
         $response = $this->httpClient->request('GET', $this->weatherApiUrl . '/current.json', [
             'query' => [
@@ -30,12 +30,13 @@ class WeatherApiClient
         return [...json_decode($response->getContent(), true), 'code' => 200];
     }
 
-    public function getForecastWeather(string $location): array
+    public function fetchForecastWeather(string $location, int $days = 10): array
     {
         $response = $this->httpClient->request('GET', $this->weatherApiUrl . '/forecast.json', [
             'query' => [
-                'key' => $this->weatherApiKey,
-                'q' => $location
+                'key'  => $this->weatherApiKey,
+                'q'    => $location,
+                'days' => $days
             ]
         ]);
 
@@ -45,5 +46,4 @@ class WeatherApiClient
 
         return [...json_decode($response->getContent(), true), 'code' => 200];
     }
-
 }
