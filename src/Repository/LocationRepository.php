@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Location;
@@ -14,37 +16,28 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class LocationRepository extends ServiceEntityRepository
 {
+    private ManagerRegistry $registry;
+
     public function __construct(ManagerRegistry $registry)
     {
+        $this->registry = $registry;
         parent::__construct($registry, Location::class);
     }
 
-    // /**
-    //  * @return Location[] Returns an array of Location objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function addLocationIfNotExists(string $locationName, string $locationCountry): bool
     {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('l.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $location = $this->findOneBy(['name' => $locationName]);
+        if (!$location) {
+            $entityManager = $this->registry->getManager();
 
-    /*
-    public function findOneBySomeField($value): ?Location
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            $location = new Location();
+            $location->setName($locationName);
+            $location->setCountry($locationCountry);
+
+            $entityManager->persist($location);
+            $entityManager->flush();
+            return true;
+        }
+        return false;
     }
-    */
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\integration;
 
 use App\Http\WeatherApiClient;
@@ -8,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class WeatherApiClientTest extends KernelTestCase
 {
     /** @test */
-    public function weather_api_client_returns_correct_current_data()
+    public function weather_api_client_returns_correct_current_data(): void
     {
         // setup
         $weatherApiClient = $this->getContainer()->get(WeatherApiClient::class);
@@ -30,10 +32,10 @@ class WeatherApiClientTest extends KernelTestCase
         $this->assertLessThanOrEqual(100, $response['current']['humidity']);
         $this->assertIsFloat($response['current']['vis_km']);
         $this->assertIsFloat($response['current']['uv']);
-   }
+    }
 
     /** @test */
-    public function weather_api_client_returns_correct_forecast_data()
+    public function weather_api_client_returns_correct_forecast_data(): void
     {
         // setup
         $weatherApiClient = $this->getContainer()->get(WeatherApiClient::class);

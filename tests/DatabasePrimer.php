@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use Doctrine\ORM\Tools\SchemaTool;
@@ -7,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class DatabasePrimer
 {
-    public static function prime(KernelInterface $kernel)
+    public static function prime(KernelInterface $kernel): void
     {
         // Make sure we are in the test environment
         if ('test' !== $kernel->getEnvironment()) {

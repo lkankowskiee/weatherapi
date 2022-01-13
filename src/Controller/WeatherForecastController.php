@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Forecast;
@@ -38,11 +40,12 @@ class WeatherForecastController extends AbstractController
     }
 
     #[Route('/update/{locationId}', name: 'update')]
-    public function updateFromApi(string             $locationId,
-                                  LocationRepository $locationRepository,
-                                  ManagerRegistry    $doctrine,
-                                  WeatherApiClient   $weatherApiClient): Response
-    {
+    public function updateFromApi(
+        string $locationId,
+        LocationRepository $locationRepository,
+        ManagerRegistry $doctrine,
+        WeatherApiClient $weatherApiClient
+    ): Response {
         $location = $locationRepository->findOneBy(['id' => $locationId]);
         if (!$location) {
             $this->addFlash('warning', 'Location not found in DB');
@@ -53,7 +56,7 @@ class WeatherForecastController extends AbstractController
         if ($response['code'] === 200) {
             $entityManager = $doctrine->getManager();
 
-            foreach($response['forecast']['forecastday'] as $f) {
+            foreach ($response['forecast']['forecastday'] as $f) {
                 $forecast = new Forecast();
                 $forecast->setLocation($location);
                 $forecast->setDate(new \DateTime($f['date']));
@@ -64,14 +67,13 @@ class WeatherForecastController extends AbstractController
                 $forecast->setTotalprecipMm($f['day']['totalprecip_mm']);
                 $forecast->setAvgvisKm($f['day']['avgvis_km']);
                 $forecast->setAvghumidity($f['day']['avghumidity']);
-                $forecast->setDailyWillItRain($f['day']['daily_will_it_rain']);
+                $forecast->setDailyWillItRain((bool)$f['day']['daily_will_it_rain']);
                 $forecast->setDailyChanceOfRain($f['day']['daily_chance_of_rain']);
-                $forecast->setDailyWillItSnow($f['day']['daily_will_it_snow']);
+                $forecast->setDailyWillItSnow((bool)$f['day']['daily_will_it_snow']);
                 $forecast->setDailyChanceOfSnow($f['day']['daily_chance_of_snow']);
                 $forecast->setConditionText($f['day']['condition']['text']);
                 $forecast->setConditionIcon($f['day']['condition']['icon']);
                 $forecast->setUv($f['day']['uv']);
-                // TODO: unset unnecessary data
                 $forecast->setHours($f['hour']);
 
                 $entityManager->persist($forecast);
@@ -79,9 +81,11 @@ class WeatherForecastController extends AbstractController
                 unset($forecast);
             }
             $entityManager->flush();
-        }
 
-        $this->addFlash('success', 'Forecast for ' . $location->getName() . ' updated');
+            $this->addFlash('success', 'Forecast for ' . $location->getName() . ' updated');
+        } else {
+            $this->addFlash('warning', $response['error'] . ' (code: ' . $response['error'] . ')');
+        }
 
         return $this->redirect($this->generateUrl('forecast.index'));
     }

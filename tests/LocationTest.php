@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use App\Entity\Location;
@@ -9,6 +11,24 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class LocationTest extends KernelTestCase
 {
     protected ?EntityManagerInterface $entityManager;
+
+    /** @test */
+    public function a_location_can_b_created_in_the_database(): void
+    {
+        $location = new Location();
+        $location->setName('Test location');
+        $location->setCountry('Test country');
+        $this->entityManager->persist($location);
+
+        $this->entityManager->flush();
+
+        $locationRepository = $this->entityManager->getRepository(Location::class);
+
+        $locationRecord = $locationRepository->findOneBy(['name' => 'Test location']);
+
+        $this->assertSame('Test location', $locationRecord->getName());
+        $this->assertSame('Test country', $locationRecord->getCountry());
+    }
 
     protected function setUp(): void
     {
@@ -25,23 +45,5 @@ class LocationTest extends KernelTestCase
 
         $this->entityManager->close();
         $this->entityManager = null;
-    }
-
-    /** @test */
-    public function a_location_can_b_created_in_the_database()
-    {
-        $location = new Location();
-        $location->setName('Test location');
-        $location->setCountry('Test country');
-        $this->entityManager->persist($location);
-
-        $this->entityManager->flush();
-
-        $locationRepository = $this->entityManager->getRepository(Location::class);
-
-        $locationRecord = $locationRepository->findOneBy(['name' => 'Test location']);
-
-        $this->assertSame('Test location', $locationRecord->getName());
-        $this->assertSame('Test country', $locationRecord->getCountry());
     }
 }

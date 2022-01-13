@@ -9,10 +9,32 @@ Dodatkowo powinna być strona z listą wszystkich zapisanych pogód (około 1000
 która posiada zrobioną paginację bez użycia paczek (w czystym symfony).
 
 
-- testy integracyjne
 - testy jednostkowe + uszczelnianie
-- ładowanie hours jako JSON
-- random w danych Forecast
-- fixtures dla lokalizacji - sensowne dane
 - test na MySQL
-- uzupełnić "get 10 days forecast"
+- pokazywanie hours jako JSON (opcjonalnie)
+- walidacja backend na wszystkich formularzach
+
+
+Potencjał do ulepszeń
+	1. Projekt powinien być prosty w uruchomieniu i szybki w użyciu tak, żeby rekruterzy nie musieli walczyć z postawieniem środowiska, tylko żeby ocenić wykonanie. Uruchomienie projektu powinno być jak najbardziej zbliżone do wykonania jednego kroku. Przed przesłaniem zadania, sprawdź, czy łatwo uruchomić i przeklikać się przez zadanie.
+	2. README powinien zawierać:
+		a. Instrukcję uruchomienia projektu.
+		b. Instrukcję instalacji zestawu przykładowych danych.
+		c. Ogólny zamysł projektu lub treść zadania.
+	3. Zależności composera powinny instalować się automatycznie po uruchomieniu kontenera php-fpm.
+	4. Lokalizacja w http://127.0.0.1:8000/current powinna zawierać chociaż prostą walidację po stronie backendu. Obecnie, jeśli się chce, można wprowadzić w formularz pustą lokalizację, a wtedy Symfony zwraca HTTP 500. Warto sprawdzić także inne formularze pod kątem walidacji.
+	5. Wszystkie klasy powinny zawierać dyrektywę declare(strict_types=1).
+	6. Kod powinien być zgodny z ogólnym standardem PSR-12.
+	7. Odnośnik "Current weather" na stronie głównej powinien przenosić do http://127.0.0.1:8000/current. Obecnie przenosi do http://127.0.0.1:8000/.
+	8. Przejście do http://127.0.0.1:8000/location/ -> Get 10 days forecast powinno przenosić do tabeli zaiwrającej prognozę na 10 dni. Obecnie tabela jest pusta.
+	9. Ten fragment ma zbyt wysoką złożoność cyklomatyczną przez zagnieżdżenia instrukcji warunkowych. Warto wyodrębnić zagnieżdżenia do osobnych metod. Warto także ograniczać długość metod do max. 15-20 linii, żeby zwiększyć czytelność.
+	10. Parametry klasy Forecast w src/Entity/Forecast.php powinny mieć zdefiniowane typy danych.
+	11. Wszelki zakomentowany kod powinien zostać usunięty.
+	12. Projekt powinien zawierać testy jednostkowe i integracyjne, zgodnie z poleceniem.
+
+Pamiętaj o:
+	1. Schludnym, nieprzekomplikowanym kodzie.
+	2. Działających funkcjonalnościach na stronie. Wszelkie błędy nie prezentują się dobrze.
+	3. Testach automatycznych.
+	4. Prostocie w uruchomieniu projektu.
+	5. Podstawowych zasadach SOLID, DRY, KISS :slightly_smiling_face:

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -13,21 +15,22 @@ class CurrentWeatherType extends AbstractType
     {
         $builder
             ->add('q', null, [
-//                'mapped' => false,
-                'label' => 'Location'
+                'label'    => 'Location',
+                'required' => true,
+                'attr'     => [
+                    'maxlength' => 30
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
         ]);
     }
 }

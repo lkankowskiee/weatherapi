@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Location;
@@ -61,4 +63,5 @@ class LocationController extends AbstractController
         $this->addFlash('success', 'Location was removed');
 
         return $this->redirect($this->generateUrl('location.index'));
-    } }
+    }
+}

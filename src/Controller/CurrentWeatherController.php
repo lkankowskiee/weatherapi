@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Location;
@@ -15,42 +17,47 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/current', name: 'current.')]
 class CurrentWeatherController extends AbstractController
 {
-    #[Route('/{q?}', name: 'index')]
-    public function index(Request $request, WeatherApiClient $weatherApiClient, RequestStack $requestStack, ManagerRegistry $doctrine): Response
-    {
+    #[Route('/', name: 'index')]
+    public function index(
+        Request $request,
+        WeatherApiClient $weatherApiClient,
+        RequestStack $requestStack,
+        ManagerRegistry $doctrine
+    ): Response {
         $session = $requestStack->getSession();
         $prevLocation = $session->get('prevLocation') ?? 'Gdańsk';
 
-        $form = $this->createForm(CurrentWeatherType::class, ['q' => $prevLocation], [
-            //'method' => 'GET'
-        ]);
+        $form = $this->createForm(CurrentWeatherType::class, ['q' => $prevLocation]);
 
         $form->handleRequest($request);
         $weatherData = [];
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $locQuery = $form->getData()['q'];
-            $session->set('prevLocation', $locQuery);
+            if ($locQuery) {
+                $weatherData = $weatherApiClient->fetchCurrentWeather($locQuery);
 
-            $weatherData = $weatherApiClient->fetchCurrentWeather($locQuery);
-            if ($weatherData['code'] === 200) {
-                // add new location to DB - should be moved somewhere else
-                $locationRepo = $doctrine->getRepository(Location::class);
-                $location = $locationRepo->findOneBy(['name' => $weatherData['location']['name']]);
-                if (!$location) {
-                    $entityManager = $doctrine->getManager();
-                    $location = new Location();
-                    $location->setName($weatherData['location']['name']);
-                    $location->setCountry($weatherData['location']['country']);
-                    $entityManager->persist($location);
-                    $entityManager->flush();
-                    $this->addFlash('success', 'New location saved!');
+                if ($weatherData['code'] === 200) {
+                    $session->set('prevLocation', $weatherData['location']['name']);
+
+                    // add new location to DB
+                    $locationRepo = $doctrine->getRepository(Location::class);
+                    if ($locationRepo->addLocationIfNotExists(
+                        $weatherData['location']['name'],
+                        $weatherData['location']['country']
+                    )) {
+                        $this->addFlash('success', 'New location saved!');
+                    }
+                } else {
+                    $this->addFlash('warning', $weatherData['error'] . ' (code: ' . $weatherData['code'] . ')');
                 }
+            } else {
+                $this->addFlash('warning', 'Location must not be empty');
             }
         }
 
         return $this->render('current_weather/index.html.twig', [
-            'form' => $form->createView(),
+            'form'    => $form->createView(),
             'weather' => $weatherData
         ]);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ForecastRepository;
@@ -11,59 +13,59 @@ class Forecast
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'forecasts')]
     #[ORM\JoinColumn(nullable: false)]
-    private $location;
+    private Location $location;
 
     #[ORM\Column(type: 'date')]
-    private $date;
+    private \DateTimeInterface $date;
 
     #[ORM\Column(type: 'float')]
-    private $maxtemp_c;
+    private float $maxtemp_c;
 
     #[ORM\Column(type: 'float')]
-    private $mintemp_c;
+    private float $mintemp_c;
 
     #[ORM\Column(type: 'float')]
-    private $avgtemp_c;
+    private float $avgtemp_c;
 
     #[ORM\Column(type: 'float')]
-    private $maxwind_kph;
+    private float $maxwind_kph;
 
     #[ORM\Column(type: 'float')]
-    private $totalprecip_mm;
+    private float $totalprecip_mm;
 
     #[ORM\Column(type: 'float')]
-    private $avgvis_km;
+    private float $avgvis_km;
 
     #[ORM\Column(type: 'float')]
-    private $avghumidity;
+    private float $avghumidity;
 
     #[ORM\Column(type: 'boolean')]
-    private $daily_will_it_rain;
+    private bool $daily_will_it_rain;
 
     #[ORM\Column(type: 'float')]
-    private $daily_chance_of_rain;
+    private float $daily_chance_of_rain;
 
     #[ORM\Column(type: 'boolean')]
-    private $daily_will_it_snow;
+    private bool $daily_will_it_snow;
 
     #[ORM\Column(type: 'float')]
-    private $daily_chance_of_snow;
+    private float $daily_chance_of_snow;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $condition_text;
+    private string $condition_text;
 
     #[ORM\Column(type: 'string', length: 200)]
-    private $condition_icon;
+    private string $condition_icon;
 
     #[ORM\Column(type: 'float')]
-    private $uv;
+    private float $uv;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    private $hours = [];
+    private ?array $hours = [];
 
     public function getId(): ?int
     {

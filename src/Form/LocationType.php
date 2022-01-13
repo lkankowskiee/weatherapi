@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Location;
@@ -19,8 +21,7 @@ class LocationType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
