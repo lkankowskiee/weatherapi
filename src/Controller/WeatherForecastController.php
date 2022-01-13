@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Forecast;
+use App\Entity\Location;
 use App\Http\WeatherApiClient;
 use App\Repository\ForecastRepository;
 use App\Repository\LocationRepository;
@@ -57,28 +58,8 @@ class WeatherForecastController extends AbstractController
             $entityManager = $doctrine->getManager();
 
             foreach ($response['forecast']['forecastday'] as $f) {
-                $forecast = new Forecast();
-                $forecast->setLocation($location);
-                $forecast->setDate(new \DateTime($f['date']));
-                $forecast->setMaxtempC($f['day']['maxtemp_c']);
-                $forecast->setMintempC($f['day']['mintemp_c']);
-                $forecast->setAvgtempC($f['day']['avgtemp_c']);
-                $forecast->setMaxwindKph($f['day']['maxwind_kph']);
-                $forecast->setTotalprecipMm($f['day']['totalprecip_mm']);
-                $forecast->setAvgvisKm($f['day']['avgvis_km']);
-                $forecast->setAvghumidity($f['day']['avghumidity']);
-                $forecast->setDailyWillItRain((bool)$f['day']['daily_will_it_rain']);
-                $forecast->setDailyChanceOfRain($f['day']['daily_chance_of_rain']);
-                $forecast->setDailyWillItSnow((bool)$f['day']['daily_will_it_snow']);
-                $forecast->setDailyChanceOfSnow($f['day']['daily_chance_of_snow']);
-                $forecast->setConditionText($f['day']['condition']['text']);
-                $forecast->setConditionIcon($f['day']['condition']['icon']);
-                $forecast->setUv($f['day']['uv']);
-                $forecast->setHours($f['hour']);
-
+                $forecast = $this->makeForecastFromArray($location, $f);
                 $entityManager->persist($forecast);
-
-                unset($forecast);
             }
             $entityManager->flush();
 
@@ -88,6 +69,30 @@ class WeatherForecastController extends AbstractController
         }
 
         return $this->redirect($this->generateUrl('forecast.index'));
+    }
+
+    private function makeForecastFromArray(Location $location, array $f): Forecast
+    {
+        $forecast = new Forecast();
+        $forecast->setLocation($location);
+        $forecast->setDate(new \DateTime($f['date']));
+        $forecast->setMaxtempC($f['day']['maxtemp_c']);
+        $forecast->setMintempC($f['day']['mintemp_c']);
+        $forecast->setAvgtempC($f['day']['avgtemp_c']);
+        $forecast->setMaxwindKph($f['day']['maxwind_kph']);
+        $forecast->setTotalprecipMm($f['day']['totalprecip_mm']);
+        $forecast->setAvgvisKm($f['day']['avgvis_km']);
+        $forecast->setAvghumidity($f['day']['avghumidity']);
+        $forecast->setDailyWillItRain((bool)$f['day']['daily_will_it_rain']);
+        $forecast->setDailyChanceOfRain($f['day']['daily_chance_of_rain']);
+        $forecast->setDailyWillItSnow((bool)$f['day']['daily_will_it_snow']);
+        $forecast->setDailyChanceOfSnow($f['day']['daily_chance_of_snow']);
+        $forecast->setConditionText($f['day']['condition']['text']);
+        $forecast->setConditionIcon($f['day']['condition']['icon']);
+        $forecast->setUv($f['day']['uv']);
+        $forecast->setHours($f['hour']);
+
+        return $forecast;
     }
 
     #[Route('/hourly/{id}', name: 'hourly')]
