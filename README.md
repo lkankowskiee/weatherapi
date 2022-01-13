@@ -11,9 +11,12 @@ On _Forecasts_ section there is a pager implementation with a little caching mec
 
 # Install
 ```shell
+composer install
 docker-compose up -d
 ```
 and go to https://127.0.0.1:8000/ in browser.
+
+Alternatively just run `symfony serve -d` on development environment.
 
 # Setup
 add your key into `.env.local` and optionaly into `.env.test.local` (if you want to run a tests)

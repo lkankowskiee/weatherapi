@@ -7,6 +7,5 @@ RUN apt-get update; \
         php8.1-sqlite \
         php8.1-mysql; \
     apt-get clean; \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-    composer install \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
